@@ -51,8 +51,6 @@ class AttendanceController extends Controller
         $userdata = Userdata::where('IDMNo', $idm)->first();
 
         if ($userdata !== null) {
-            Log::debug("hit");
-            Log::debug($userdata);
             //ざっくりデータを用意する
             $fullname = $userdata->FullName;
             $codeNo = $userdata->CodeNo;

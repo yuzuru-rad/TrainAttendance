@@ -16,13 +16,10 @@ class UserController extends Controller
      */
     public function updateData()
     {
-        Log::debug('start!');
         // MySQLのテーブルから全レコードを削除
         Userdata::truncate();
-        Log::debug('delete complete!');
         // SQL Serverからデータを取得
         $users = UserdataSqlsrv::all();
-        Log::debug('get complete!');
 
         DB::beginTransaction();
         try {
@@ -30,13 +27,11 @@ class UserController extends Controller
                 // MySQLにデータを保存
                 Userdata::create($user->toArray());
             }
-            Log::debug($user -> CodeNo);
             DB::commit();
 
             // 完了したらユーザーにメッセージを表示
             return redirect()->back()->with('message', '職員データを更新しました');
         } catch (\Exception $e) {
-            Log::debug($e);
             DB::rollback();
 
             // エラーメッセージをユーザーに表示（

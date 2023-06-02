@@ -20,8 +20,8 @@ class OutputController extends Controller
      */
     public function createExcel(Request $request) {
         $dateInput = $request->input('date');
+        //formatで求めてる形にデータを整形
         $date = Carbon::parse($dateInput)->format('Y-m-d');
-        Log::debug($date);
         $attendances = Attendance::where('training_day', $date)->get();
 
         $spreadsheet = new Spreadsheet();
