@@ -28,7 +28,14 @@ php8.1/laravel10.12で作成されています。
 3. nfcpyの設定、こちら参考に。　<https://qiita.com/75u2u/items/010b602605d087edd1ee>
 
 その後、envファイルをいじりましょう。  
-.env.exampleから.envを作って、db_connectionと最下部にあるDB_HOST_SQLSRV周りを適切に設定します。
+.env.exampleから.envを作って、db_connectionと最下部にあるDB_HOST_SQLSRV周りを適切に設定します。  
+
+envがセットできたらDBを作りましょう。  
+
+- php artisan migrate
+- php artisan db:seed
+
+これでDBの準備が完了します。  
 
 ここまでできたら、php artisan serve をして動作確認をお願いします。
 
