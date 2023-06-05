@@ -27,11 +27,3 @@
     </div>
 </div>
 @endsection
-
-@section('scripts')
-<script>
-    $(document).ready(function(){
-        $('.datepicker').datepicker();
-    });
-</script>
-@endsection
