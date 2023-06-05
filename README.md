@@ -1,4 +1,4 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# NFC出席管理システム
 
 ## はじめに
 
@@ -25,7 +25,7 @@ php8.1/laravel10.12で作成されています。
 
 1. composer install
 2. npm install
-3. nfcpyの設定、こちら参考に。　https://qiita.com/75u2u/items/010b602605d087edd1ee
+3. nfcpyの設定、こちら参考に。　<https://qiita.com/75u2u/items/010b602605d087edd1ee>
 
 その後、envファイルをいじりましょう。  
 .env.exampleから.envを作って、db_connectionと最下部にあるDB_HOST_SQLSRV周りを適切に設定します。
