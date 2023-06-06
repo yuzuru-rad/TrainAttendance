@@ -5,7 +5,7 @@
 @section('content')
 <div class = "row">
     <audio id="myAudio">
-        <source src="/audio/xxxx.mp3" type="audio/mpeg">
+        <source src="/audio/success.mp3" type="audio/mpeg">
     </audio>      
     <div class="col s12 m4">
         <h4>研修一覧</h4>
@@ -23,14 +23,14 @@
 
         <div class="col s12 m8">
             <h4>出席確認</h4>
-            <div id="message"></div>
+            <div id="message" style="font-size: 12pt"></div>
             <div><br></div>
             <button id="startReader" class="btn waves-effect waves-light" type="submit" name="action">読み取り開始
             </button>
             <button id="stopReader" class="btn waves-effect waves-light red" type="submit" name="action">読み取り停止
             </button>
             <div><br></div>
-            <div id="result">タッチした人の名前が表示されます。<br>音が鳴ったらタッチしてください。</div></div>
+            <div id="result" style="font-size: 12pt">タッチした人の名前が表示されます。<br>音が鳴ったらカードを離してください。</div></div>
         </div>
     </div>
 </div>
@@ -103,7 +103,6 @@
 
         function startRequest() {
             var audio = document.getElementById("myAudio");
-                audio.play();
 
             $('#message').text("ICカード受付中……");
             //ラジオボタンで選択した研修会をセット
@@ -121,6 +120,8 @@
             }).done(function(data){
                 console.log(data + "を取得しました。");    
                 // <div id="result">にdataを代入
+                audio.play();
+                $('#message').text("受付ました。カードを離してください。");
                 $("#result").html(data);
                 // 1秒後にページ更新
                 setTimeout(function () {
