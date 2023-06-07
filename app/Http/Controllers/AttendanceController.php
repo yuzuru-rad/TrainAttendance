@@ -14,11 +14,17 @@ class AttendanceController extends Controller
      * めっちゃ回避策。
      * attendaneceが止まらないため、最新のタッチレコードを削除する必要があった。
      * IDのずれが頻繁に発生することになるのが課題、IDは別に出力しないからいいか…。
+     * 2023-06-06追記
+     * 問題発生。
+     * 下記機能の二重登録弾きをした結果、二重登録のカードでcancelしようとした場合に、最後のレコードが消滅する現象が発生。
+     * 回避策はないため、必ず出席者のカードで停止処理を行うことを記載。
+     * 
      */
     public function cancel()
-    {
+    {   /*
         $attendance = Attendance::orderBy('created_at', 'DESC')->orderBy('id', 'DESC')->first();
         $attendance->delete();
+        */
         return;
     }
 
@@ -64,15 +70,22 @@ class AttendanceController extends Controller
             $attendance->CodeNo = $codeNo;
             $attendance->Section = $section;
             $attendance->training_group = $training_group;
-            $attendance->training_day = now()->format('Y-m-d');    
+            $attendance->training_day = now()->format('Y-m-d');
 
-            $attendance->save();
-            print $fullname;
-            exit();
+            //この辺に多重登録を防ぐ仕組みを作る
+            $isAlready = Attendance::where('CodeNo', $codeNo)
+                                    ->where('training_group', $training_group)
+                                    ->where('training_day', $attendance->training_day)
+                                    ->get();
+            Log::debug($isAlready);
+            if($isAlready->isEmpty()){
+                $attendance->save();
+                print $fullname;
+                exit();    
+            }else{
+                exit();
+            }
         } else {
-            //IDMNoが未登録だった場合こちらを返す
-            $message = "未登録の職員です。";
-            print $message;
             exit();
         }
 

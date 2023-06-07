@@ -6,6 +6,9 @@
 <div class = "row">
     <audio id="myAudio">
         <source src="/audio/success.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="myAudio2">
+        <source src="/audio/unsuccess.mp3" type="audio/mpeg">
     </audio>      
     <div class="col s12 m4">
         <h4>研修一覧</h4>
@@ -87,7 +90,7 @@
                     console.log('cancel');
                     request.abort();//これでリクエスト停止しないと、下記コード『†††††††††』以降のリロードの部分が走っちゃう！！
                     //リクエストを検知して、メッセージを表示
-                    $('#message').text("カードをタッチして受付を停止してください。");
+                    $('#message').html("必ず出席者のカードをタッチして<br>受付を停止してください。").css({color: 'red', 'font-size': '18pt'});
                 }
                 //カードをタッチしないと裏で走ってるapi/attendanceが止まってくれない。
                 //それが止まらないと次のサーバーへのリクエストは一切停止されるため、ここのコードはカードがタッチされるまで動かない。
@@ -96,13 +99,14 @@
                     type: 'POST',
                     async: true,
                 }).done(function(){
-                    $('#message').html("受付は正常に終了しました。<br>再開する場合は開始ボタンを押してください。");
+                    $('#message').html("受付は正常に終了しました。<br>再開する場合は開始ボタンを押してください。").css({color: 'black', 'font-size': '12pt'});
                 });
             });
         });
 
         function startRequest() {
             var audio = document.getElementById("myAudio");
+            var audio2 = document.getElementById("myAudio2");
 
             $('#message').text("ICカード受付中……");
             //ラジオボタンで選択した研修会をセット
@@ -120,9 +124,14 @@
             }).done(function(data){
                 console.log(data + "を取得しました。");    
                 // <div id="result">にdataを代入
-                audio.play();
-                $('#message').text("受付ました。カードを離してください。");
-                $("#result").html(data);
+                if(data){
+                    audio.play();
+                    $('#message').text("受付ました。カードを離してください。");
+                    $("#result").html(data);
+                }else{
+                    audio2.play();
+                    $('#message').text('不正な入力です、多重出席または、データベースに未登録の職員になります。')
+                }
                 // 1秒後にページ更新
                 setTimeout(function () {
                     location.reload();

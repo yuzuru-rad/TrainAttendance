@@ -36,9 +36,7 @@ Route::post('/userupdate', [UserController::class, 'updateData'])->name('userupd
 Route::post('/createExcel', [OutputController::class, 'createExcel'])->name('createExcel');
 
 //以下、画面遷移
-Route::get('/output', function(){
-    return view('output');
-})->name('output');
+Route::get('/output', [OutputController::class,'index'])->name('output');
 
 Route::get('/update',function(){
     return view('update');

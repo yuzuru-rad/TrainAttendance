@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Training;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
@@ -12,18 +13,37 @@ use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 class OutputController extends Controller
-{
+{   
+    public function index(){
+        $trainings = Training::all();
+        return view('output', compact('trainings'));
+    }
     /**
      * 出席者をエクセルに出力する
      * PhpSprreadsheetというライブラリを使えばできる
      * 
      */
     public function createExcel(Request $request) {
-        $dateInput = $request->input('date');
         //formatで求めてる形にデータを整形
-        $date = Carbon::parse($dateInput)->format('Y-m-d');
-        $attendances = Attendance::where('training_day', $date)->get();
+        //enddateが入力されているか否かで処理を分ける
+        if($request->input('enddate')){
+            $startdateInput = $request->input('startdate');
+            $enddateInput = $request->input('enddate');
+            $trainingGroup = $request->input('trainingGroup');
+        }else{
+            $startdateInput = $request->input('startdate');
+            $enddateInput = $request->input('startdate');
+            $trainingGroup = $request->input('trainingGroup');
+        }
 
+        $startdate = Carbon::parse($startdateInput)->format('Y-m-d');
+        $enddate = Carbon::parse($enddateInput)->format('Y-m-d');
+        
+        //もらってきたデータで検索する。where句を長くする場合はこんな感じに。
+        $attendances = Attendance::whereBetween('training_day', [$startdate, $enddate])
+                                ->where('training_group', $trainingGroup)
+                                ->get();
+    
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
         
@@ -55,7 +75,7 @@ class OutputController extends Controller
 
         $writer = new Xlsx($spreadsheet);
 
-        $fileName = "出席者".$date.".xlsx";
+        $fileName = "出席者リスト_".$startdate."_".$trainingGroup.".xlsx";
         $temp_file = tempnam(sys_get_temp_dir(), $fileName);
         
         $writer->save($temp_file);
